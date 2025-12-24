@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LINE MINI APP TEST</title>
+    <script charset="utf-8" src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+</head>
+<body>
+    <h1>認証テスト</h1>
+    <div id="status">初期化中...</div>
+    <button id="authBtn" style="display:none;" onclick="sendToken()">サーバーで認証する</button>
+
+    <script>
+        // 設定：あなたの情報を入れてください
+        const LIFF_ID = 'YOUR_LIFF_ID'; // LINE Developersで確認したLIFF ID
+        const CF_WORKER_URL = 'https://line-auth-api.xxxx.workers.dev'; // CloudflareのURL
+
+        async function main() {
+            try {
+                // 1. LIFFの初期化
+                await liff.init({ liffId: LIFF_ID });
+
+                if (!liff.isLoggedIn()) {
+                    // 2. ログインしていなければログイン画面へ
+                    liff.login();
+                } else {
+                    document.getElementById('status').innerText = 'ログイン済み。サーバーに送信可能です。';
+                    document.getElementById('authBtn').style.display = 'block';
+                }
+            } catch (err) {
+                console.error('LIFF初期化失敗', err);
+                document.getElementById('status').innerText = 'エラーが発生しました。';
+            }
+        }
+
+        async function sendToken() {
+            document.getElementById('status').innerText = '認証中...';
+            
+            // 3. IDトークンの取得
+            const idToken = liff.getIDToken();
+
+            try {
+                // 4. Cloudflare Workersへ送信
+                const response = await fetch(CF_WORKER_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${idToken}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                const result = await response.json();
+                
+                if (response.ok) {
+                    document.getElementById('status').innerText = 
+                        `認証成功！ メールアドレス: ${result.email}`;
+                } else {
+                    document.getElementById('status').innerText = `認証失敗: ${result.message}`;
+                }
+            } catch (error) {
+                document.getElementById('status').innerText = '通信エラーが発生しました。';
+                console.error(error);
+            }
+        }
+
+        main();
+    </script>
+</body>
+</html>
