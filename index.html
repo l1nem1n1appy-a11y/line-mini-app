@@ -73,7 +73,7 @@
             const idToken = liff.getIDToken();
 
             try {
-                // 4. Cloudflare Workersへ送信
+                // 4. Cloudflare Workersへ送信//
                 const response = await fetch(CF_WORKER_URL, {
                     method: 'POST',
                     headers: {
