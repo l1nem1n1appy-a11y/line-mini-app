@@ -45,8 +45,8 @@
                 // 4. Cloudflare Workersへ送信
                 const response = await fetch(CF_WORKER_URL, {
                     method: 'POST',
+                    mode: "cors",
                     headers: {
-                        'Access-Control-Allow-Origin': `*`,
                         'Authorization': `Bearer ${idToken}`,
                         'Content-Type': 'application/json',
                         'Cache-Control': 'no-store'
