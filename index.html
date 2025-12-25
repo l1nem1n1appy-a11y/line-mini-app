@@ -35,6 +35,7 @@
         }
 
         async function sendToken() {
+/*
             document.getElementById('status').innerText = '認証中...';
             
             // 3. IDトークンの取得
@@ -64,10 +65,42 @@
                 document.getElementById('status').innerText = '通信エラーが発生しました。';
                 console.error(error);
             }
-        }
+*/
 
-/*        
+            document.getElementById('status').innerText = '認証中...';
+            
+            // 3. IDトークンの取得
+            const idToken = liff.getIDToken();
+
+            try {
+                // 4. Cloudflare Workersへ送信
+                const response = await fetch(CF_WORKER_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${idToken}`,
+                        'Content-Type': 'application/json',
+                        'Cache-Control': 'no-store'
+                    }
+                });
+
+                const result = await response.json();
+                
+                if (response.ok) {
+                    document.getElementById('status').innerText = 
+                        `認証成功！ メールアドレス: ${result.email}`;
+                } else {
+                    document.getElementById('status').innerText = `認証失敗: ${result.message}`;
+                }
+            } catch (error) {
+                document.getElementById('status').innerText = '通信エラーが発生しました。';
+                console.error(error);
+            }
+*/
+
+        }
+        
         async function testCors() {
+
           const CF_WORKER_URL = 'https://line-auth-api.l1nem1n1appy.workers.dev'; // 末尾に / を入れない
           
           try {
@@ -85,7 +118,6 @@
             console.error("まだエラーが出ます:", error);
           }
         }
-*/
 
         main();
     </script>
