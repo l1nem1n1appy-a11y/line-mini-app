@@ -13,6 +13,10 @@
 
 
     <script>
+        function printError(err) {
+          console.error('ecode:${err.code}, msg:${err.message}, cause:${err.cause}');
+        }
+        
         // 設定：あなたの情報を入れてください
         const LIFF_ID = '2008748710-pETQZV1r'; // LINE Developersで確認したLIFF ID
         const CF_WORKER_URL = 'https://line-auth-api.l1nem1n1appy.workers.dev'; // CloudflareのURL
@@ -93,6 +97,7 @@
             } catch (err) {
                 document.getElementById('status').innerText = '通信エラーが発生しました。';
                 alert(err.message);
+                printError(err);
                 console.error(err);
             }
         }
