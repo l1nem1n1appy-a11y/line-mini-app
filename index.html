@@ -73,38 +73,6 @@
         }
 
         async function sendToken() {
-/*
-            document.getElementById('status').innerText = '認証中...';
-            
-            // 3. IDトークンの取得
-            const idToken = liff.getIDToken();
-
-            try {
-                // 4. Cloudflare Workersへ送信
-                const response = await fetch(CF_WORKER_URL, {
-                    method: 'POST',
-                    mode: "cors",
-                    headers: {
-                        'Authorization': `Bearer ${idToken}`,
-                        'Content-Type': 'application/json',
-                        'Cache-Control': 'no-store'
-                    }
-                });
-
-                const result = await response.json();
-                
-                if (response.ok) {
-                    document.getElementById('status').innerText = 
-                        `認証成功！ メールアドレス: ${result.email}`;
-                } else {
-                    document.getElementById('status').innerText = `認証失敗: ${result.message}`;
-                }
-            } catch (err) {
-                document.getElementById('status').innerText = '通信エラーが発生しました。';
-                console.error(err);
-            }
-*/
-
             document.getElementById('status').innerText = '認証中...';
             
             // 3. IDトークンの取得
@@ -114,9 +82,11 @@
                 // 4. Cloudflare Workersへ送信///
                 const response = await fetch(CF_WORKER_URL, {
                     method: 'POST',
+                    mode: "cors",
                     headers: {
                         'Authorization': `Bearer ${idToken}`,
                         'Content-Type': 'application/json',
+                        'Cache-Control': 'no-store'
                     }
                 });
 
