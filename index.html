@@ -82,6 +82,13 @@
         }
 
         async function sendToken() {
+            if (!liff.isLoggedIn()) {
+                // 2. ログインしていなければログイン画面へ
+                //    トークンはlogin後のキャッシュなので、1時間たつと有効期限切れの物になるので
+                liff.login();
+                return;
+            }
+            
             updateStatusMessage('認証中...');
             
             // 3. IDトークンの取得
